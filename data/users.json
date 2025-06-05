@@ -6,12 +6,12 @@
     },
     {
         "username": "minh",
-        "password": "1811",
-        "role": "user"
-    },
-    {
-        "username": "quynh",
-        "password": "123",
-        "role": "user"
+        "role": "user",
+        "name": "minh",
+        "phone": "0903123456",
+        "cccd": "01023111234",
+        "dob": "2025-06-01",
+        "address": "\u01b0efgrhtjy",
+        "password": "1811"
     }
 ]

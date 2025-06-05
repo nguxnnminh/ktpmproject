@@ -13,10 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     foreach ($users as $user) {
         if ($user['username'] === $username && $user['password'] === $password) {
-            $_SESSION['user'] = [
-                'username' => $user['username'],
-                'role' => $user['role']
-            ];
+            // Lấy toàn bộ thông tin từ bản ghi gốc
+            $_SESSION['user'] = $user;
             $found = true;
 
             if (isset($_SESSION['redirect_after_login'])) {

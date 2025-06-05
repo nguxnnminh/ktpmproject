@@ -2,33 +2,29 @@
     {
         "id": 1,
         "title": "Avengers: Endgame",
-        "genre": "Hành động, Viễn tưởng",
-        "duration": "181 phút",
-        "image": "assets/endgame.jpg",
-        "tickets_booked": 150
+        "genre": "H\u00e0nh \u0111\u1ed9ng",
+        "duration": "181 ph\u00fat",
+        "image": "assets\/endgame.jpg"
     },
     {
         "id": 2,
-        "title": "Spider-Man: No Way Home",
-        "genre": "Hành động, Phiêu lưu",
-        "duration": "148 phút",
-        "image": "assets/spiderman.jpg",
-        "tickets_booked": 200
+        "title": "Parasite",
+        "genre": "T\u00e2m l\u00fd",
+        "duration": "132 ph\u00fat",
+        "image": "assets\/parasite.jpg"
     },
     {
         "id": 3,
-        "title": "Thám Tử Kiên",
-        "genre": "Trinh thám, Hài hước",
-        "duration": "120 phút",
-        "image": "assets/thamtu.jpg",
-        "tickets_booked": 120
+        "title": "Spider-Man: No Way Home",
+        "genre": "H\u00e0nh \u0111\u1ed9ng",
+        "duration": "148 ph\u00fat",
+        "image": "assets\/spiderman.jpg"
     },
     {
         "id": 4,
-        "title": "Parasite",
-        "genre": "Kinh dị, Hài hước",
-        "duration": "134",
-        "image": "assets/parasite.jpg",
-        "tickets_booked": 90
+        "title": "abc",
+        "genre": "123",
+        "duration": "1234 ph\u00fat",
+        "image": "assets\\thamtu.jpg"
     }
 ]

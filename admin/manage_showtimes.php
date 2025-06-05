@@ -2,39 +2,59 @@
 include '../includes/admin_header.php';
 include '../includes/data.php';
 
-$movies = loadData('../data/movies.json');
 $showtimes = loadData('../data/showtimes.json');
+$bookings = loadData('../data/bookings.json');
+$movies = loadData('../data/movies.json');
 
-// Xử lý thêm suất chiếu
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_showtime'])) {
+$errors = [];
+$success = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $movie_id = intval($_POST['movie_id']);
     $datetime = trim($_POST['datetime']);
     $room = trim($_POST['room']);
 
-    $newId = empty($showtimes) ? 1 : max(array_column($showtimes, 'id')) + 1;
-    $showtimes[] = [
-        "id" => $newId,
-        "movie_id" => $movie_id,
-        "datetime" => $datetime,
-        "room" => $room
-    ];
-    file_put_contents('../data/showtimes.json', json_encode($showtimes, JSON_PRETTY_PRINT));
-    header("Location: manage_showtimes.php");
-    exit;
+    if (empty($movie_id) || empty($datetime) || empty($room)) {
+        $errors[] = "Vui lòng điền đầy đủ thông tin.";
+    } else {
+        $newShowtime = [
+            "id" => count($showtimes) + 1,
+            "movie_id" => $movie_id,
+            "datetime" => $datetime,
+            "room" => $room
+        ];
+        $showtimes[] = $newShowtime;
+        file_put_contents('../data/showtimes.json', json_encode($showtimes, JSON_PRETTY_PRINT));
+        $success = true;
+    }
 }
 
-// Xử lý xóa suất chiếu
-if (isset($_GET['delete_id'])) {
-    $deleteId = intval($_GET['delete_id']);
-    $showtimes = array_filter($showtimes, fn($s) => $s['id'] !== $deleteId);
-    file_put_contents('../data/showtimes.json', json_encode(array_values($showtimes), JSON_PRETTY_PRINT));
-    header("Location: manage_showtimes.php");
-    exit;
-}
+if (isset($_GET['delete'])) {
+    $showtimeId = intval($_GET['delete']);
+    $canDelete = true;
+    $showtimeDetails = '';
 
-$movieMap = [];
-foreach ($movies as $m) {
-    $movieMap[$m['id']] = $m['title'];
+    foreach ($showtimes as $showtime) {
+        if ($showtime['id'] === $showtimeId) {
+            $showtimeDetails = "Suất chiếu vào " . $showtime['datetime'] . " tại " . $showtime['room'];
+            break;
+        }
+    }
+
+    foreach ($bookings as $booking) {
+        if ($booking['showtime_id'] === $showtimeId) {
+            $canDelete = false;
+            $errors[] = "Không thể xóa suất chiếu '$showtimeDetails' vì có vé đã đặt.";
+            break;
+        }
+    }
+
+    if ($canDelete) {
+        $showtimes = array_filter($showtimes, fn($s) => $s['id'] !== $showtimeId);
+        $showtimes = array_values($showtimes);
+        file_put_contents('../data/showtimes.json', json_encode($showtimes, JSON_PRETTY_PRINT));
+        $success = true;
+    }
 }
 ?>
 
@@ -43,35 +63,57 @@ foreach ($movies as $m) {
 
     <!-- Form thêm suất chiếu -->
     <h3>Thêm suất chiếu mới</h3>
+    <?php if ($success): ?>
+        <p style="color: green;">🎉 Thao tác thành công!</p>
+    <?php endif; ?>
+    <?php if (!empty($errors)): ?>
+        <div style="color: red;">
+            <?php foreach ($errors as $e): ?>
+                <p>⚠️ <?= htmlspecialchars($e) ?></p>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
     <form method="POST">
         <label>Phim:</label><br>
         <select name="movie_id" required>
-            <?php foreach ($movies as $m): ?>
-                <option value="<?= $m['id'] ?>"><?= htmlspecialchars($m['title']) ?></option>
+            <?php foreach ($movies as $movie): ?>
+                <option value="<?= $movie['id'] ?>"><?= htmlspecialchars($movie['title']) ?></option>
             <?php endforeach; ?>
         </select><br><br>
 
-        <label>Thời gian (YYYY-MM-DD HH:MM):</label><br>
-        <input type="text" name="datetime" placeholder="2025-06-01 18:00" required><br><br>
+        <label>Thời gian:</label><br>
+        <input type="datetime-local" name="datetime" required><br><br>
 
         <label>Phòng chiếu:</label><br>
-        <input type="text" name="room" placeholder="Phòng 1" required><br><br>
+        <input type="text" name="room" required><br><br>
 
-        <button type="submit" name="add_showtime" class="btn">Thêm suất chiếu</button>
+        <button type="submit" class="btn">Thêm suất chiếu</button>
     </form>
 
     <!-- Danh sách suất chiếu -->
     <h3>Danh sách suất chiếu</h3>
-    <div class="showtime-list">
-        <?php foreach ($showtimes as $s): ?>
-            <div class="showtime-card">
-                <p><strong>Phim:</strong> <?= htmlspecialchars($movieMap[$s['movie_id']] ?? 'Không rõ') ?></p>
-                <p><strong>Thời gian:</strong> <?= htmlspecialchars($s['datetime']) ?></p>
-                <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($s['room']) ?></p>
-                <a href="?delete_id=<?= $s['id'] ?>" class="btn" style="background: #dc3545;" onclick="return confirm('Bạn có chắc muốn xóa suất chiếu này?')">Xóa</a>
-            </div>
-        <?php endforeach; ?>
-    </div>
+    <?php if (empty($showtimes)): ?>
+        <p>Chưa có suất chiếu nào.</p>
+    <?php else: ?>
+        <div class="showtime-list">
+            <?php foreach ($showtimes as $showtime): ?>
+                <?php
+                $movie = array_filter($movies, fn($m) => $m['id'] === $showtime['movie_id']);
+                $movie = array_values($movie)[0] ?? ['title' => 'Không xác định'];
+                ?>
+                <div class="showtime-card">
+                    <div class="showtime-content">
+                        <p><strong>Phim:</strong> <?= htmlspecialchars($movie['title']) ?></p>
+                        <p><strong>Thời gian:</strong> <?= htmlspecialchars($showtime['datetime']) ?></p>
+                        <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
+                    </div>
+                    <div class="showtime-actions">
+                        <a href="?delete=<?= $showtime['id'] ?>" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php include '../includes/footer.php'; ?>

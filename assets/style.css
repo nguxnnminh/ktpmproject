@@ -108,6 +108,7 @@ body {
     font-weight: 600;
     transition: transform 0.3s ease, background 0.3s ease;
     display: inline-block;
+    border: none; /* Xóa viền đen */
 }
 
 .btn:hover {
@@ -218,6 +219,7 @@ h2::after {
     align-self: center;
     width: 90%;
     display: block;
+    border: none; /* Xóa viền đen */
 }
 
 .movie-btn:hover {
@@ -346,18 +348,17 @@ h2::after {
     font-weight: 600;
     transition: transform 0.2s ease, background-color 0.2s ease;
     font-family: 'Roboto', sans-serif;
+    border: none; /* Xóa viền đen */
 }
 
 .seat.booked {
     background-color: #a3b1bf;
     cursor: not-allowed;
-    border-color: #a3b1bf;
     opacity: 0.7;
 }
 
 .seat.selected {
     background-color: #ffd700;
-    border-color: #ffd700;
     color: #1a2a44;
 }
 
@@ -372,7 +373,6 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:checked + .seat {
     background-color: #ffd700;
-    border-color: #ffd700;
     color: #1a2a44;
 }
 
@@ -564,10 +564,28 @@ footer {
 .btn-cancel {
     background: linear-gradient(90deg, #6c757d, #5a6268);
     text-align: center;
+    border: none; /* Xóa viền đen */
 }
 
 .btn-cancel:hover {
     background: linear-gradient(90deg, #5a6268, #6c757d);
+}
+
+/* ===== Nút Xóa (btn-delete) ===== */
+.btn-delete {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: white;
+    background-color: #dc3545; /* Màu đỏ như ảnh 130 */
+    border: none; /* Xóa viền đen */
+    border-radius: 4px;
+    margin: 5px 0;
+    transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Tối hơn khi hover */
 }
 
 /* ===== Responsive ===== */

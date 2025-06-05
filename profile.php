@@ -19,29 +19,36 @@ $editMode = isset($_GET['edit']) && $_GET['edit'] === 'true';
 
 // Xử lý cập nhật thông tin
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Lấy dữ liệu từ form
     $user['name'] = $_POST['name'] ?? $user['name'];
     $user['phone'] = $_POST['phone'] ?? $user['phone'];
     $user['cccd'] = $_POST['cccd'] ?? $user['cccd'];
     $user['dob'] = $_POST['dob'] ?? $user['dob'];
     $user['address'] = $_POST['address'] ?? $user['address'];
 
-    $_SESSION['user'] = $user;
-    // Lưu dữ liệu vào file (giả định lưu vào users.json)
+    // Lấy danh sách người dùng từ users.json
     $users = loadData('data/users.json');
     foreach ($users as &$u) {
         if ($u['username'] === $user['username']) {
-            $u = $user;
+            // Giữ nguyên password từ bản ghi gốc
+            $user['password'] = $u['password'];
+            $u = $user; // Cập nhật toàn bộ thông tin
             break;
         }
     }
+
+    // Cập nhật session
+    $_SESSION['user'] = $user;
+    // Ghi lại vào file users.json
     file_put_contents('data/users.json', json_encode($users, JSON_PRETTY_PRINT));
+
     // Chuyển về chế độ xem sau khi lưu
     header('Location: profile.php');
     exit;
 }
-
 ?>
 
+<!-- Phần HTML giữ nguyên -->
 <div class="container">
     <h2>👤 Thông tin cá nhân</h2>
 
