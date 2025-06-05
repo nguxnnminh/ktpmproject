@@ -64,20 +64,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
         </div>
     </div>
 
-    <!-- Thêm biểu đồ -->
+    <!-- Biểu đồ thống kê -->
     <h2>📈 Thống kê suất chiếu theo phim</h2>
-    <div style="max-width: 800px; margin: 0 auto;">
+    <div style="max-width: 1200px; margin: 0 auto; height: 400px;">
         <?php if (empty($labels) || empty($data)): ?>
             <p style="color: #dc3545; font-weight: bold; text-align: center;">Không có dữ liệu</p>
         <?php else: ?>
-            <canvas id="showtimeChart"></canvas>
+            <canvas id="showtimesChart" height="400"></canvas>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
-                const ctx = document.getElementById('showtimeChart').getContext('2d');
-                new Chart(ctx, {
+                const ctx = document.getElementById('showtimesChart').getContext('2d');
+                const chart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: <?= json_encode($labels) ?>,
+                        labels: <?= json_encode($labels, JSON_UNESCAPED_UNICODE) ?>,
                         datasets: [{
                             label: 'Số suất chiếu',
                             data: <?= json_encode($data) ?>,
@@ -87,6 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
                                 beginAtZero: true,
@@ -101,9 +103,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
                                     text: 'Phim'
                                 },
                                 ticks: {
-                                    maxRotation: 45,
-                                    minRotation: 45,
-                                    autoSkip: false
+                                    maxRotation: 0,
+                                    minRotation: 0,
+                                    autoSkip: true,
+                                    maxTicksLimit: 15,
+                                    autoSkipPadding: 20
                                 }
                             }
                         }
@@ -113,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
         <?php endif; ?>
     </div>
 
-    <!-- Hiển thị chi tiết vé đã đặt -->
+    <!-- Chi tiết vé đã đặt -->
     <?php if ($showBookingDetails && !empty($bookings)): ?>
         <h2>📋 Chi tiết vé đã đặt</h2>
         <div class="booking-details">
@@ -129,11 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
                 <tbody>
                     <?php foreach ($bookings as $booking): ?>
                         <?php
-                        $showtime = array_filter($showtimes, fn($s) => $s['id'] === $booking['showtime_id']);
-                        $showtime = array_values($showtime)[0] ?? null;
+                        $showtime = array_values(array_filter($showtimes, fn($s) => $s['id'] === $booking['showtime_id']))[0] ?? null;
                         if ($showtime) {
-                            $movie = array_filter($movies, fn($m) => $m['id'] === $showtime['movie_id']);
-                            $movie = array_values($movie)[0] ?? ['title' => 'Không xác định'];
+                            $movie = array_values(array_filter($movies, fn($m) => $m['id'] === $showtime['movie_id']))[0] ?? ['title' => 'Không xác định'];
                         } else {
                             $movie = ['title' => 'Không xác định'];
                         }

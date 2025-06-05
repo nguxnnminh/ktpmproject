@@ -1,41 +1,52 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+    $_SESSION['login_message'] = "⚠️ Bạn cần đăng nhập để xem vé đã đặt.";
+    header('Location: login.php');
+    exit;
+}
+
 include 'includes/header.php';
 include 'includes/data.php';
 
-$bookings = loadData('data/bookings.json');
 $showtimes = loadData('data/showtimes.json');
 $movies = loadData('data/movies.json');
+$bookings = loadData('data/bookings.json');
 
-// Tạo bản đồ ID => đối tượng
-$movieMap = [];
-foreach ($movies as $m) {
-    $movieMap[$m['id']] = $m['title'];
-}
+// Lọc booking theo user_id của tài khoản hiện tại
+$userBookings = array_filter($bookings, function($b) {
+    return isset($b['user_id']) && $b['user_id'] == $_SESSION['user']['id'];
+});
 
-$showtimeMap = [];
-foreach ($showtimes as $s) {
-    $showtimeMap[$s['id']] = $s;
-}
+$userBookings = array_values($userBookings); // Reset keys
 ?>
 
 <div class="container">
-    <h2>🎫 Vé đã đặt</h2>
+    <h2>🎟️ Vé đã đặt</h2>
 
-    <?php if (empty($bookings)): ?>
-        <p>Bạn chưa đặt vé nào.</p>
+    <?php if (empty($userBookings)): ?>
+        <p>⚠️ Bạn chưa đặt vé nào.</p>
     <?php else: ?>
         <div class="ticket-list">
-            <?php foreach ($bookings as $b): 
-                $showtime = $showtimeMap[$b['showtime_id']] ?? null;
-                if (!$showtime) continue;
-
-                $movieTitle = $movieMap[$showtime['movie_id']] ?? 'Không rõ phim';
-            ?>
+            <?php foreach ($userBookings as $booking): ?>
+                <?php
+                $showtime = array_filter($showtimes, function($s) use ($booking) {
+                    return $s['id'] == $booking['showtime_id'];
+                });
+                $showtime = array_values($showtime)[0];
+                $movie = array_filter($movies, function($m) use ($showtime) {
+                    return $m['id'] == $showtime['movie_id'];
+                });
+                $movie = array_values($movie)[0];
+                ?>
                 <div class="ticket-card">
-                    <h3><?= htmlspecialchars($movieTitle) ?></h3>
-                    <p><strong>🕒 Thời gian:</strong> <?= htmlspecialchars($showtime['datetime']) ?></p>
-                    <p><strong>📍 Phòng:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
-                    <p><strong>🎟️ Ghế:</strong> <?= implode(', ', $b['seats']) ?></p>
+                    <h3><?= htmlspecialchars($movie['title']) ?></h3>
+                    <p>🕒 Thời gian: <?= $showtime['datetime'] ?></p>
+                    <p>📍 Phòng: <?= $showtime['room'] ?></p>
+                    <p>🎟️ Ghế: <?= implode(", ", $booking['seats']) ?></p>
+                    <p>⏰ Thời gian đặt: <?= $booking['booking_time'] ?></p>
                 </div>
             <?php endforeach; ?>
         </div>

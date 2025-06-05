@@ -48,17 +48,30 @@ foreach ($bookings as $b) {
     }
 }
 
-// Xử lý đặt vé
+// Trong phần xử lý POST trong booking.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seats'])) {
     $selectedSeats = $_POST['seats'];
 
+    // Kiểm tra xem ghế đã được đặt chưa
+    $alreadyBooked = array_intersect($selectedSeats, $bookedSeats);
+    if (!empty($alreadyBooked)) {
+        echo "<div class='container'><h2>⚠️ Một số ghế đã được đặt: " . implode(", ", $alreadyBooked) . ". Vui lòng chọn ghế khác.</h2></div>";
+        echo "<div class='container'><a href='booking.php?showtime_id=$showtimeId' class='btn'>← Chọn lại ghế</a></div>";
+        include 'includes/footer.php';
+        exit;
+    }
+
+    // Lưu thông tin đặt vé với user_id
     $bookings[] = [
         "showtime_id" => $showtimeId,
-        "seats" => $selectedSeats
+        "seats" => $selectedSeats,
+        "user_id" => $_SESSION['user']['id'], // Thêm user_id từ session
+        "booking_time" => date('Y-m-d H:i:s')
     ];
 
     file_put_contents('data/bookings.json', json_encode($bookings, JSON_PRETTY_PRINT));
     echo "<div class='container'><h2>🎟️ Đặt vé thành công cho các ghế: " . implode(", ", $selectedSeats) . "</h2></div>";
+    echo "<div class='container'><p>Phim: $movieTitle | Suất chiếu: {$showtime['datetime']} | Phòng: {$showtime['room']}</p></div>";
     echo "<div class='container'><a href='index.php' class='btn'>← Quay về trang chủ</a></div>";
     include 'includes/footer.php';
     exit;
@@ -72,7 +85,8 @@ $cols = range(1, 10);
 <div class="container">
     <h2>🎟️ Đặt vé cho: <?= htmlspecialchars($movieTitle) ?></h2>
     <p>🕒 <?= $showtime['datetime'] ?> | 📍 <?= $showtime['room'] ?></p>
-    <p><strong>Đang đặt vé với tài khoản:</strong> Admin</p>
+    <!-- Xóa dòng này -->
+    <!-- <p><strong>Đang đặt vé với tài khoản:</strong> Admin</p> -->
 
     <div class="seat-map-container">
         <h3>Sơ đồ ghế ngồi</h3>

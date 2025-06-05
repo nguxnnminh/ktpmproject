@@ -13,5 +13,10 @@
         "dob": "2025-06-01",
         "address": "\u01b0efgrhtjy",
         "password": "1811"
+    },
+    {
+        "username": "quynh",
+        "password": "123",
+        "role": "user"
     }
 ]
