@@ -13,7 +13,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>CGV Quản trị</title>
+    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) : 'CGV Quản trị' ?></title>
     <!-- Đường dẫn tuyệt đối -->
     <link rel="stylesheet" href="/movie-booking/assets/style.css">
     <!-- Đường dẫn tương đối -->

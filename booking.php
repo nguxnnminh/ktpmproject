@@ -1,7 +1,9 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-if (!isset($_SESSION['user'])) {
+
+if (!isset($_SESSION['user']) || !isset($_SESSION['user']['user_id'])) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     $_SESSION['login_message'] = "⚠️ Bạn cần đăng nhập để tiếp tục đặt vé.";
     header('Location: login.php');
@@ -31,6 +33,10 @@ if (!$showtime) {
     exit;
 }
 
+// Định dạng thời gian suất chiếu
+$dt = DateTime::createFromFormat('Y-m-d\TH:i', $showtime['datetime']);
+$formattedDatetime = $dt ? $dt->format('d/m/Y H:i') : htmlspecialchars($showtime['datetime']);
+
 // Tìm tên phim
 $movieTitle = '';
 foreach ($movies as $m) {
@@ -43,16 +49,14 @@ foreach ($movies as $m) {
 // Ghế đã đặt
 $bookedSeats = [];
 foreach ($bookings as $b) {
-    if ($b['showtime_id'] == $showtimeId) {
+    if ($b['showtime_id'] == $showtimeId && isset($b['user_id'])) {
         $bookedSeats = array_merge($bookedSeats, $b['seats']);
     }
 }
 
-// Trong phần xử lý POST trong booking.php
+// Xử lý đặt ghế
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seats'])) {
     $selectedSeats = $_POST['seats'];
-
-    // Kiểm tra xem ghế đã được đặt chưa
     $alreadyBooked = array_intersect($selectedSeats, $bookedSeats);
     if (!empty($alreadyBooked)) {
         echo "<div class='container'><h2>⚠️ Một số ghế đã được đặt: " . implode(", ", $alreadyBooked) . ". Vui lòng chọn ghế khác.</h2></div>";
@@ -61,32 +65,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seats'])) {
         exit;
     }
 
-    // Lưu thông tin đặt vé với user_id
+    $user_id = $_SESSION['user']['user_id'];
     $bookings[] = [
         "showtime_id" => $showtimeId,
         "seats" => $selectedSeats,
-        "user_id" => $_SESSION['user']['id'], // Thêm user_id từ session
+        "user_id" => $user_id,
         "booking_time" => date('Y-m-d H:i:s')
     ];
 
-    file_put_contents('data/bookings.json', json_encode($bookings, JSON_PRETTY_PRINT));
+    saveData('data/bookings.json', $bookings);
+
+    $formattedBookingTime = DateTime::createFromFormat('Y-m-d H:i:s', end($bookings)['booking_time'])->format('d/m/Y H:i');
+
     echo "<div class='container'><h2>🎟️ Đặt vé thành công cho các ghế: " . implode(", ", $selectedSeats) . "</h2></div>";
-    echo "<div class='container'><p>Phim: $movieTitle | Suất chiếu: {$showtime['datetime']} | Phòng: {$showtime['room']}</p></div>";
+    echo "<div class='container'><p>Phim: $movieTitle | Suất chiếu: $formattedDatetime | Phòng: {$showtime['room']}</p></div>";
+    echo "<div class='container'><p>⏰ Thời gian đặt: $formattedBookingTime</p></div>";
     echo "<div class='container'><a href='index.php' class='btn'>← Quay về trang chủ</a></div>";
     include 'includes/footer.php';
     exit;
 }
 
-// Ghế giả lập
+// Ghế
 $rows = ['A', 'B', 'C', 'D', 'E', 'F'];
 $cols = range(1, 10);
 ?>
 
 <div class="container">
     <h2>🎟️ Đặt vé cho: <?= htmlspecialchars($movieTitle) ?></h2>
-    <p>🕒 <?= $showtime['datetime'] ?> | 📍 <?= $showtime['room'] ?></p>
-    <!-- Xóa dòng này -->
-    <!-- <p><strong>Đang đặt vé với tài khoản:</strong> Admin</p> -->
+    <p>🕒 <?= $formattedDatetime ?> | 📍 <?= htmlspecialchars($showtime['room']) ?></p>
 
     <div class="seat-map-container">
         <h3>Sơ đồ ghế ngồi</h3>

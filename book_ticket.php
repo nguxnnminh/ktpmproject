@@ -43,7 +43,7 @@ if (!$selectedMovie) {
     <h3>Chọn suất chiếu</h3>
     <div class="showtime-list">
         <?php
-        $movieShowtimes = array_filter($showtimes, function($showtime) use ($movieId) {
+        $movieShowtimes = array_filter($showtimes, function ($showtime) use ($movieId) {
             return $showtime['movie_id'] == $movieId;
         });
 
@@ -51,10 +51,13 @@ if (!$selectedMovie) {
             echo "<p>Chưa có suất chiếu cho phim này.</p>";
         } else {
             foreach ($movieShowtimes as $showtime) {
-                $isPast = (new DateTime($showtime['datetime'], new DateTimeZone('+0700'))) < (new DateTime('now', new DateTimeZone('+0700')));
+                $dt = DateTime::createFromFormat('Y-m-d\TH:i', $showtime['datetime'], new DateTimeZone('+0700'));
+                $now = new DateTime('now', new DateTimeZone('+0700'));
+                $isPast = $dt < $now;
+                $formattedDatetime = $dt ? $dt->format('d/m/Y H:i') : htmlspecialchars($showtime['datetime']);
                 ?>
                 <div class="showtime-card">
-                    <p><strong>Thời gian:</strong> <?= htmlspecialchars($showtime['datetime']) ?> <?php if ($isPast): ?> (Đã qua)<?php endif; ?></p>
+                    <p><strong>Thời gian:</strong> <?= $formattedDatetime ?> <?php if ($isPast): ?> (Đã qua)<?php endif; ?></p>
                     <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
                     <?php if (!$isPast): ?>
                         <a href="booking.php?showtime_id=<?= $showtime['id'] ?>" class="btn">Chọn suất</a>
@@ -74,16 +77,12 @@ if (!$selectedMovie) {
 <?php include 'includes/footer.php'; ?>
 
 <script>
-    window.onscroll = function() {
+    window.onscroll = function () {
         let btn = document.getElementById("back-to-top");
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-            btn.style.display = "flex";
-        } else {
-            btn.style.display = "none";
-        }
+        btn.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "flex" : "none";
     };
 
-    document.getElementById("back-to-top").addEventListener("click", function(e) {
+    document.getElementById("back-to-top").addEventListener("click", function (e) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });

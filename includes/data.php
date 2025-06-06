@@ -16,3 +16,8 @@ function loadData($filename) {
     // Nếu lỗi khi decode hoặc kết quả không phải mảng → trả mảng rỗng
     return is_array($data) ? $data : [];
 }
+
+function saveData($filename, $data) {
+    file_put_contents($filename, json_encode($data, JSON_PRETTY_PRINT));
+}
+?>

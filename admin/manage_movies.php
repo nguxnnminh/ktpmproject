@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     <?php endif; ?>
     <form method="POST">
-        <label>Tiêu đề:</label><br>
+        <label>Tên phim:</label><br>
         <input type="text" name="title" required><br><br>
 
         <label>Thể loại:</label><br>
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php foreach ($movies as $movie): ?>
                 <div class="showtime-card">
                     <div class="showtime-content">
-                        <p><strong>Tiêu đề:</strong> <?= htmlspecialchars($movie['title']) ?></p>
+                        <p><strong>Tên phim:</strong> <?= htmlspecialchars($movie['title']) ?></p>
                         <p><strong>Thể loại:</strong> <?= htmlspecialchars($movie['genre']) ?></p>
                         <p><strong>Thời lượng:</strong> <?= htmlspecialchars($movie['duration']) ?></p>
                         <p><strong>Hình ảnh:</strong> <?= htmlspecialchars($movie['image']) ?></p>

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $found = false;
 
     foreach ($users as $user) {
-        if ($user['username'] === $username && $user['password'] === $password) {
+        if ($user['username'] === $username && password_verify($password, $user['password'])) {
             // Lấy toàn bộ thông tin từ bản ghi gốc
             $_SESSION['user'] = $user;
             $found = true;

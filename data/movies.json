@@ -1,1 +1,23 @@
-[]
+[
+    {
+        "id": 1,
+        "title": "Avengers: Endgame",
+        "genre": "H\u00e0nh \u0110\u1ed9ng, Khoa H\u1ecdc Vi\u1ec5n T\u01b0\u1edfng",
+        "duration": "182 Ph\u00fat",
+        "image": "assets\\endgame.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Spider-Man: No Way Home",
+        "genre": "H\u00e0nh \u0110\u1ed9ng, Phi\u00eau L\u01b0u",
+        "duration": "157 Ph\u00fat",
+        "image": "assets\\spiderman.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Parasite",
+        "genre": "T\u00e2m L\u00fd",
+        "duration": "134 Ph\u00fat",
+        "image": "assets\\parasite.jpg"
+    }
+]

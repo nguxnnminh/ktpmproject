@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newShowtime = [
             "id" => count($showtimes) + 1,
             "movie_id" => $movie_id,
-            "datetime" => $datetime,
+            "datetime" => $datetime, // vẫn lưu theo định dạng 'Y-m-d\TH:i'
             "room" => $room
         ];
         $showtimes[] = $newShowtime;
@@ -100,11 +100,13 @@ if (isset($_GET['delete'])) {
                 <?php
                 $movie = array_filter($movies, fn($m) => $m['id'] === $showtime['movie_id']);
                 $movie = array_values($movie)[0] ?? ['title' => 'Không xác định'];
+                $dt = DateTime::createFromFormat('Y-m-d\TH:i', $showtime['datetime']);
+                $formattedDatetime = $dt ? $dt->format('d/m/Y H:i') : htmlspecialchars($showtime['datetime']);
                 ?>
                 <div class="showtime-card">
                     <div class="showtime-content">
                         <p><strong>Phim:</strong> <?= htmlspecialchars($movie['title']) ?></p>
-                        <p><strong>Thời gian:</strong> <?= htmlspecialchars($showtime['datetime']) ?></p>
+                        <p><strong>Thời gian:</strong> <?= $formattedDatetime ?></p>
                         <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
                     </div>
                     <div class="showtime-actions">

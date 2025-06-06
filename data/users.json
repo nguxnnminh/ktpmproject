@@ -1,22 +1,24 @@
 [
     {
         "username": "abc",
-        "password": "123456",
+        "password": "$2y$12$LBTIa8TBtX6\/LnRqqfBLeO4W7GyBTQB9bfC4sht55TmaEorzINbbu",
         "role": "admin"
     },
     {
+        "user_id": 1,
         "username": "minh",
+        "password": "$2y$12$UZqU75.CAxTRZb7QpEvQFOjVIwso7PP92tYMsqqiEyTBCCWWxD.kq",
         "role": "user",
-        "name": "minh",
-        "phone": "0903123456",
-        "cccd": "01023111234",
-        "dob": "2025-06-01",
-        "address": "\u01b0efgrhtjy",
-        "password": "1811"
+        "name": "aBC",
+        "phone": "0983123456",
+        "cccd": "010204001223",
+        "dob": "2025-04-16",
+        "address": "sdfg"
     },
     {
+        "user_id": 2,
         "username": "quynh",
-        "password": "123",
+        "password": "$2y$12$6vZ07msGDCCGK8aiya49ce8Gaxfd0ttSpB8emJ5Y5HMT2PxFRbsLW",
         "role": "user"
     }
 ]

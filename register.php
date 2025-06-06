@@ -24,12 +24,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($errors)) {
+        // Tạo user_id mới (tăng từ số lớn nhất hiện có)
+        $maxId = 0;
+        foreach ($users as $u) {
+            if (isset($u['user_id']) && $u['user_id'] > $maxId) {
+                $maxId = $u['user_id'];
+            }
+        }
+        $newUserId = $maxId + 1;
+
+        // Thêm user mới với user_id và mật khẩu đã mã hóa
         $users[] = [
+            "user_id" => $newUserId,
             "username" => $username,
-            "password" => $password,
+            "password" => password_hash($password, PASSWORD_DEFAULT), // Mã hóa mật khẩu
             "role" => "user"
         ];
-        file_put_contents('data/users.json', json_encode($users, JSON_PRETTY_PRINT));
+        saveData('data/users.json', $users); // Sử dụng saveData thay vì file_put_contents
         $success = true;
     }
 }
