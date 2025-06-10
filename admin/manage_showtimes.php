@@ -84,7 +84,7 @@ if (isset($_GET['delete'])) {
         <label>Thời gian:</label><br>
         <input type="datetime-local" name="datetime" required><br><br>
 
-        <label>Phòng chiếu:</label><br>
+        <label>Rạp:</label><br>
         <input type="text" name="room" required><br><br>
 
         <button type="submit" class="btn">Thêm suất chiếu</button>
@@ -107,7 +107,7 @@ if (isset($_GET['delete'])) {
                     <div class="showtime-content">
                         <p><strong>Phim:</strong> <?= htmlspecialchars($movie['title']) ?></p>
                         <p><strong>Thời gian:</strong> <?= $formattedDatetime ?></p>
-                        <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
+                        <p><strong>Rạp:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
                     </div>
                     <div class="showtime-actions">
                         <a href="?delete=<?= $showtime['id'] ?>" class="btn-delete" onclick="return confirm('Bạn có chắc chắn muốn xóa suất chiếu này?')">Xóa</a>

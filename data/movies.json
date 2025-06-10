@@ -19,5 +19,12 @@
         "genre": "T\u00e2m L\u00fd",
         "duration": "134 Ph\u00fat",
         "image": "assets\\parasite.jpg"
+    },
+    {
+        "id": 4,
+        "title": "TH\u00c1M T\u1eec KI\u00caN: K\u1ef2 \u00c1N KH\u00d4NG \u0110\u1ea6U",
+        "genre": "Kinh D\u1ecb",
+        "duration": "131 Ph\u00fat",
+        "image": "assets\\thamtu.jpg"
     }
 ]
