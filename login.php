@@ -13,24 +13,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     foreach ($users as $user) {
         if ($user['username'] === $username && password_verify($password, $user['password'])) {
-            // Lấy toàn bộ thông tin từ bản ghi gốc
             $_SESSION['user'] = $user;
             $found = true;
 
-            if (isset($_SESSION['redirect_after_login'])) {
-                $redirect = $_SESSION['redirect_after_login'];
-                unset($_SESSION['redirect_after_login']);
-                unset($_SESSION['login_message']);
-                header("Location: $redirect");
-                exit;
-            }
+            $redirect = isset($_SESSION['redirect_after_login']) ? $_SESSION['redirect_after_login'] : null;
+            unset($_SESSION['redirect_after_login']);
+            unset($_SESSION['login_message']);
 
             if ($user['role'] === 'admin') {
                 header("Location: admin/dashboard.php");
+                exit;
             } else {
-                header("Location: index.php");
+                header("Location: " . ($redirect ?: 'index.php'));
+                exit;
             }
-            exit;
         }
     }
 

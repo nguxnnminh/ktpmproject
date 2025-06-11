@@ -34,7 +34,7 @@ if (empty($showtimes)) {
                 <div class="showtime-card">
                     <p><strong>Phim:</strong> <?= htmlspecialchars($movieTitle) ?></p>
                     <p><strong>Thời gian:</strong> <?= htmlspecialchars($showtime['datetime']) ?> <?php if ($isPast): ?> (Đã qua)<?php endif; ?></p>
-                    <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
+                    <p><strong>Rạp:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
                     <?php if (!$isPast): ?>
                         <a href="booking.php?showtime_id=<?= $showtime['id'] ?>" class="btn">Đặt vé</a>
                     <?php else: ?>

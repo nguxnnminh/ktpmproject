@@ -1,4 +1,8 @@
 <?php
+session_start();
+include '../includes/auth.php';
+requireAdmin();
+
 include '../includes/admin_header.php';
 include '../includes/data.php';
 
@@ -64,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
     color: black;
     font-weight: bold;
     padding: 12px 24px;
-    display: flex; /* đổi inline-block thành flex */
-    align-items: center; /* căn giữa theo chiều dọc */
-    justify-content: center; /* căn giữa theo chiều ngang */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
     border-radius: 8px;
     margin-top: 10px;
@@ -161,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
                 const ctx = document.getElementById('showtimesChart').getContext('2d');
-                const chart = new Chart(ctx, {
+                new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: <?= json_encode($labels, JSON_UNESCAPED_UNICODE) ?>,
@@ -211,8 +215,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
                     <tr>
                         <th>Phim</th>
                         <th>Thời gian chiếu</th>
-                        <th>Phòng chiếu</th>
-                        <th>Ghế đã đặt</th>
+                        <th>Rạp</th>
+                        <th>Ghế đã chọn</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -232,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_bookings'])) {
                             <td><?= htmlspecialchars($movie['title']) ?></td>
                             <td><?= htmlspecialchars($formattedDatetime) ?></td>
                             <td><?= htmlspecialchars($showtime['room'] ?? 'Không xác định') ?></td>
-                            <td><?= htmlspecialchars(implode(', ', $booking['seats'] ?? ['Không xác định'])) ?></td>
+                            <td><?= htmlspecialchars(implode(', ', $booking['seats'] ?? ['Không có'])) ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

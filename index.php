@@ -1,6 +1,15 @@
 <?php
-include 'includes/header.php';
+session_start();
+include 'includes/auth.php';
 include 'includes/data.php';
+
+// Ngăn admin truy cập index.php
+if (isLoggedIn() && isAdmin()) {
+    header("Location: admin/dashboard.php");
+    exit;
+}
+
+include 'includes/header.php';
 
 $movies = loadData('data/movies.json');
 

@@ -58,7 +58,7 @@ if (!$selectedMovie) {
                 ?>
                 <div class="showtime-card">
                     <p><strong>Thời gian:</strong> <?= $formattedDatetime ?> <?php if ($isPast): ?> (Đã qua)<?php endif; ?></p>
-                    <p><strong>Phòng chiếu:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
+                    <p><strong>Rạp:</strong> <?= htmlspecialchars($showtime['room']) ?></p>
                     <?php if (!$isPast): ?>
                         <a href="booking.php?showtime_id=<?= $showtime['id'] ?>" class="btn">Chọn suất</a>
                     <?php else: ?>

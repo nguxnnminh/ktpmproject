@@ -49,7 +49,7 @@ $userBookings = array_values($userBookings); // Reset key
                 <div class="ticket-card">
                     <h3><?= htmlspecialchars($movie['title']) ?></h3>
                     <p>🕒 Thời gian: <?= $formattedDatetime ?></p>
-                    <p>📍 Phòng: <?= htmlspecialchars($showtime['room']) ?></p>
+                    <p>📍 Rạp: <?= htmlspecialchars($showtime['room']) ?></p>
                     <p>🎟️ Ghế: <?= implode(", ", array_map('htmlspecialchars', $booking['seats'])) ?></p>
                     <p>⏰ Thời gian đặt: <?= DateTime::createFromFormat('Y-m-d H:i:s', $booking['booking_time'])->format('d/m/Y H:i') ?></p>
                 </div>

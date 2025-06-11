@@ -1,14 +1,9 @@
 <?php
 session_start();
+include 'includes/auth.php';
+requireLogin();
+
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-
-
-if (!isset($_SESSION['user']) || !isset($_SESSION['user']['user_id'])) {
-    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-    $_SESSION['login_message'] = "⚠️ Bạn cần đăng nhập để tiếp tục đặt vé.";
-    header('Location: login.php');
-    exit;
-}
 
 include 'includes/header.php';
 include 'includes/data.php';
@@ -78,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['seats'])) {
     $formattedBookingTime = DateTime::createFromFormat('Y-m-d H:i:s', end($bookings)['booking_time'])->format('d/m/Y H:i');
 
     echo "<div class='container'><h2>🎟️ Đặt vé thành công cho các ghế: " . implode(", ", $selectedSeats) . "</h2></div>";
-    echo "<div class='container'><p>Phim: $movieTitle | Suất chiếu: $formattedDatetime | Phòng: {$showtime['room']}</p></div>";
+    echo "<div class='container'><p>Phim: $movieTitle | Suất chiếu: $formattedDatetime | Rạp: {$showtime['room']}</p></div>";
     echo "<div class='container'><p>⏰ Thời gian đặt: $formattedBookingTime</p></div>";
     echo "<div class='container'><a href='index.php' class='btn'>← Quay về trang chủ</a></div>";
     include 'includes/footer.php';

@@ -13,7 +13,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) : 'CGV Quản trị' ?></title>
+    <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) : 'CGV' ?></title>
     <!-- Đường dẫn tuyệt đối -->
     <link rel="stylesheet" href="/movie-booking/assets/style.css">
     <!-- Đường dẫn tương đối -->
@@ -22,7 +22,7 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
 <body>
 
 <div class="navbar">
-    <h2>🎬 CGV Quản trị</h2>
+    <h2>CGV</h2>
     <ul class="menu">
         <li class="menu-item"><a href="dashboard.php">📊 Thống kê</a></li>
         <li class="menu-item"><a href="manage_movies.php">🎬 Quản lý phim</a></li>

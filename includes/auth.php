@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 /**
  * Kiểm tra đã đăng nhập chưa
  */
@@ -20,6 +18,8 @@ function isAdmin() {
  */
 function requireLogin() {
     if (!isLoggedIn()) {
+        $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+        $_SESSION['login_message'] = "⚠️ Bạn cần đăng nhập để tiếp tục.";
         header("Location: login.php");
         exit;
     }
